@@ -10,13 +10,15 @@ async function collectMetenox (corporationId: number): Promise<Metenox[]> {
     fuelassets: StructureAsset[]
   }
   const structure = await StructureQueries.metenox(corporationId)
-  const fuels = await Promise.all(structure.map(async (structure) => {
-    const fuelassets = await StructureAssetQueries.fuel(corporationId, structure.structure_id)
+  const fuelAssets = await StructureAssetQueries
+    .fuelMany(corporationId, structure.map((s) => s.structure_id))
+
+  const fuels: StructureInput[] = structure.map((s) => {
     return {
-      structure,
-      fuelassets
-    } as StructureInput
-  }))
+      structure: s,
+      fuelassets: fuelAssets.filter((fa) => fa.location_id === s.structure_id)
+    }
+  })
 
   return fuels.map((structure) => {
     const gas = structure.fuelassets.find((asset) => asset.typeID === 81143)?.quantity || 0

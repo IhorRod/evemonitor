@@ -22,6 +22,11 @@ class StructureAssetQueries {
     const assets = await this.structure(corporationId, structureId)
     return assets.filter((asset: StructureAsset) => asset.location_flag === 'StructureFuel')
   }
+
+  async fuelMany (corporationId: number, structureIds: number[]): Promise<StructureAsset[]> {
+    const assets = await this.all(corporationId)
+    return assets.filter((asset: StructureAsset) => structureIds.includes(asset.location_id) && asset.location_flag === 'StructureFuel')
+  }
 }
 
 const queries = new StructureAssetQueries()
