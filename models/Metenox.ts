@@ -18,7 +18,7 @@ class Metenox {
 
   // Hours of gas left
   leftGas (): number {
-    return Math.round(this.gas / 55)
+    return Math.round(this.gas / 88)
   }
 }
 
